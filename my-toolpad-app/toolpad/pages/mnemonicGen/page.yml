@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mui/mui-toolpad/v0.1.53/docs/schemas/v1/definitions.json#properties/Page
+
+apiVersion: v1
+kind: page
+spec:
+  alias:
+    - CZphrT1
+  title: Mnemonic tool
+  content:
+    - component: Button
+      name: generateMnemonicButton
+      props:
+        content: Generate Mnemonic
+        onClick:
+          $$jsExpressionAction: queryMnemonic.call();
+        fullWidth: true
+    - component: Text
+      name: mnemonicText
+      props:
+        mode: null
+        loading:
+          $$jsExpression: queryMnemonic.isLoading
+        value:
+          $$jsExpression: queryMnemonic.data ?? "No mnemonic yet"
+    - component: PageRow
+      name: hdPathRow
+      props:
+        justifyContent: start
+      children:
+        - component: Text
+          name: hdPathLabel
+          props:
+            value: HD path
+        - component: TextField
+          name: hdPathInput
+          props:
+            defaultValue: m/44'/60'/0'/0
+    - component: PageRow
+      name: privateKeyRow
+      props:
+        justifyContent: start
+      children:
+        - component: Text
+          name: privateKey
+          props:
+            value: private key
+        - component: Text
+          name: privateKeyValue
+          props:
+            value:
+              $$jsExpression: getHDAccount.data.privateKey
+    - component: PageRow
+      name: publicKeyRow
+      props:
+        justifyContent: start
+      children:
+        - component: Text
+          name: publicKey
+          props:
+            value: public key
+        - component: Text
+          name: text1
+          props:
+            value:
+              $$jsExpression: getHDAccount.data?.publicKey ?? "empty"
+    - component: Text
+      name: text
+      props:
+        value:
+          $$jsExpression: JSON.stringify(getHDAccount.data) ?? getHDAccount.error
+  queries:
+    - name: queryMnemonic
+      mode: mutation
+      query:
+        function: mnemonic.ts#generateMnemonic_
+        kind: local
+    - name: generateMnemonic
+      mode: mutation
+      query:
+        function: mnemonic.ts#generateMnemonic_
+        kind: local
+    - name: getHDAccount
+      mode: query
+      query:
+        function: mnemonic.ts#createPrivateKeyFromMnemonic
+        kind: local
+      parameters:
+        - name: mnemonic
+          value:
+            $$jsExpression: queryMnemonic.data
+        - name: hdpath
+          value:
+            $$jsExpression: hdPathInput.value
+  display: shell
