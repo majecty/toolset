@@ -7,6 +7,7 @@ import (
 	"log"
 
 	g "github.com/AllenDang/giu"
+	pp "github.com/k0kubun/pp/v3"
 	"github.com/tendermint/tendermint/libs/bytes"
 	tendermintHTTP "github.com/tendermint/tendermint/rpc/client/http"
 )
@@ -31,6 +32,7 @@ func makeWidgets() []g.Widget {
 	widgets := []g.Widget{
 		g.Label("Tx Viewer"),
 		g.InputText(&txHash),
+		g.Button("Get Random Recent Tx").OnClick(onClickGetRandomRecentTx),
 		g.Button("Get Tx information").OnClick(onClickGetTx),
 
 		g.InputTextMultiline(&rawTxInformation).Size(-1, -1),
@@ -71,4 +73,28 @@ func onClickGetTx() {
 	rawTxInformation = fmt.Sprintf("Tx: %v", result)
 	fmt.Printf("Tx: %v\n", result)
 	fmt.Println("hi")
+}
+
+func onClickGetRandomRecentTx() {
+	blockheight, err := tendermintHTTPClient.Status(context.Background())
+	if err != nil {
+		fmt.Printf("failed to get latest block number: %w\n", err)
+		return
+	}
+
+	query := fmt.Sprintf("tx.height >= %d", blockheight.SyncInfo.LatestBlockHeight)
+	page := 1
+	perPage := 1
+	result, err := tendermintHTTPClient.TxSearch(context.Background(), query, false, &page, &perPage, "asc")
+	if err != nil {
+		rawTxInformation = fmt.Sprintf("Failed to get tx: %v", err)
+		fmt.Printf("Failed to get tx: %v\n", err)
+		return
+	}
+	txHash = string(result.Txs[0].Tx.String())
+	rawTxInformation = fmt.Sprintf("Tx: %v", result)
+
+	pp.Default.SetColoringEnabled(false)
+	rawTxInformation = pp.Sprint(result)
+	fmt.Printf("Tx: %v\n", result)
 }
