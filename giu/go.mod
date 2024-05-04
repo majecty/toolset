@@ -7,6 +7,7 @@ require (
 	github.com/btcsuite/btcd v0.22.1
 	github.com/cosmos/cosmos-sdk v0.45.10
 	github.com/ethereum/go-ethereum v1.13.2
+	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/tendermint/tendermint v0.37.0-dev
 )
 
