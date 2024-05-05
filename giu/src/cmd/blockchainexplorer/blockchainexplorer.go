@@ -29,6 +29,7 @@ func makeWidgets() []g.Widget {
 			explorer.ResetNodeUrl()
 		}),
 		g.Spacing(),
+		g.Separator(),
 		g.TabBar().
 			TabItems(
 				g.TabItem("Node").

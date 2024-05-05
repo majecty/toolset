@@ -15,7 +15,6 @@ var (
 
 func DrawNodeWidgets() []g.Widget {
 	return []g.Widget{
-		g.Label("Node information"),
 		g.Button("Get Node information").OnClick(func() {
 			nodeStatus = ""
 			httpClient, err := getTendermintHTTPClient()
@@ -38,6 +37,7 @@ func DrawNodeWidgets() []g.Widget {
 
 			nodeStatus = string(nodeStatusJson)
 		}),
-		g.InputTextMultiline(&nodeStatus).Size(-1, -1),
+		g.Condition(nodeStatus != "", explorerutil.DrawJsonTreeWidget(nodeStatus), nil),
+		// g.InputTextMultiline(&nodeStatus).Size(-1, -1),
 	}
 }
