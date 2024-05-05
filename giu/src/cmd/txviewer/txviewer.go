@@ -101,9 +101,6 @@ func onClickGetRandomRecentTx() {
 	jsonBytes, _ := json.MarshalIndent(result, "", "  ")
 	rawTxInformation = string(jsonBytes)
 
-	// TODO 임시로 호출하려고 여기 둠
-	// makeJsonTreeWidget(jsonBytes)
-	// rawTxInformation = pp.Sprint(result)
 	fmt.Printf("Tx: %v\n", result)
 }
 
@@ -125,10 +122,42 @@ func makeJsonTreeWidget() []g.Widget {
 
 	for _, key := range keys {
 		value := mapp[key]
+		widgets = append(widgets,
+			g.TreeNode(key).Layout(makeJsonTreeWidgetRecursively(value)...))
+	}
+	return widgets
+}
+
+func makeJsonTreeWidgetRecursively(data interface{}) []g.Widget {
+	var widgets []g.Widget = make([]g.Widget, 0)
+
+	switch data.(type) {
+	case map[string]interface{}:
+		mapp := data.(map[string]interface{})
+		keys := make([]string, 0, len(mapp))
+		for k := range mapp {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+
+		for _, key := range keys {
+			value := mapp[key]
+			widgets = append(widgets, g.Row(
+				g.TreeNode(key).Layout(makeJsonTreeWidgetRecursively(value)...),
+			))
+		}
+	case []interface{}:
+		arr := data.([]interface{})
+		for i, value := range arr {
+			widgets = append(widgets, g.Row(
+				g.TreeNode(fmt.Sprintf("%d", i)).Layout(makeJsonTreeWidgetRecursively(value)...),
+			))
+		}
+	default:
 		widgets = append(widgets, g.Row(
-			g.Label(key),
-			g.Label(fmt.Sprintf("%v", value)),
+			g.Label(fmt.Sprintf("%v", data)),
 		))
 	}
+
 	return widgets
 }
