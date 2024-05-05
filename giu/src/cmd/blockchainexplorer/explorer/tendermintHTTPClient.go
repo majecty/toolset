@@ -1,6 +1,8 @@
 package explorer
 
 import (
+	"fmt"
+
 	tendermintHTTP "github.com/tendermint/tendermint/rpc/client/http"
 )
 
@@ -15,7 +17,7 @@ var (
 func getTendermintHTTPClient() (*tendermintHTTP.HTTP, error) {
 	tendermintHTTPClient, err := tendermintHTTP.New(NodeUrl)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create tendermint client: %w", err)
 	}
 
 	return tendermintHTTPClient, nil
