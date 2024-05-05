@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"log"
+	"sort"
 
 	g "github.com/AllenDang/giu"
 	pp "github.com/k0kubun/pp/v3"
@@ -34,7 +36,7 @@ func makeWidgets() []g.Widget {
 		g.InputText(&txHash),
 		g.Button("Get Random Recent Tx").OnClick(onClickGetRandomRecentTx),
 		g.Button("Get Tx information").OnClick(onClickGetTx),
-
+		g.Condition(rawTxInformation != "", makeJsonTreeWidget(), nil),
 		g.InputTextMultiline(&rawTxInformation).Size(-1, -1),
 	}
 
@@ -95,6 +97,38 @@ func onClickGetRandomRecentTx() {
 	rawTxInformation = fmt.Sprintf("Tx: %v", result)
 
 	pp.Default.SetColoringEnabled(false)
-	rawTxInformation = pp.Sprint(result)
+	// marsharl result to json and save it to rawTxInformation
+	jsonBytes, _ := json.MarshalIndent(result, "", "  ")
+	rawTxInformation = string(jsonBytes)
+
+	// TODO 임시로 호출하려고 여기 둠
+	// makeJsonTreeWidget(jsonBytes)
+	// rawTxInformation = pp.Sprint(result)
 	fmt.Printf("Tx: %v\n", result)
+}
+
+func makeJsonTreeWidget() []g.Widget {
+	var data interface{}
+	if err := json.Unmarshal([]byte(rawTxInformation), &data); err != nil {
+		fmt.Printf("Failed to unmarshal json: %v\n", err)
+		return nil
+	}
+
+	var widgets []g.Widget = make([]g.Widget, 0)
+
+	var mapp = data.(map[string]interface{})
+	keys := make([]string, 0, len(mapp))
+	for k := range mapp {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		value := mapp[key]
+		widgets = append(widgets, g.Row(
+			g.Label(key),
+			g.Label(fmt.Sprintf("%v", value)),
+		))
+	}
+	return widgets
 }
