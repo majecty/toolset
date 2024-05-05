@@ -9,6 +9,7 @@ require (
 	github.com/ethereum/go-ethereum v1.13.2
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/tendermint/tendermint v0.37.0-dev
+	github.com/tendermint/tmlibs v0.9.0
 )
 
 require (
@@ -40,6 +41,7 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6 // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b // indirect
+	github.com/go-kit/kit v0.12.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect

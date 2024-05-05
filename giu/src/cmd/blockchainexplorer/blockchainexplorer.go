@@ -64,6 +64,7 @@ func loop() {
 }
 
 func main() {
+	explorerutil.InitSeiCosmos()
 	wnd := g.NewMasterWindow("Block explorer", 600, 400, 0)
 	g.Context.FontAtlas.SetDefaultFontSize(3)
 
