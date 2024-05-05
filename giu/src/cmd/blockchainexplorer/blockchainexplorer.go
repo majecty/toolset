@@ -60,15 +60,21 @@ func makeWidgets() []g.Widget {
 func loop() {
 	widgets := makeWidgets()
 
-	g.SingleWindow().Layout(
+	homeWindow := g.Window("Home")
+	homeWindow.Size(600, 400)
+
+	homeWindow.Layout(
 		widgets...,
 	)
+	explorerutil.DrawBlockWindows()
 }
 
 func main() {
 	explorerutil.InitSeiCosmos()
-	wnd := g.NewMasterWindow("Block explorer", 600, 400, 0)
+	wnd := g.NewMasterWindow("Block explorer", 800, 800, 0)
 	g.Context.FontAtlas.SetDefaultFontSize(3)
+
+	explorerutil.DummyBlockWindows()
 
 	wnd.Run(loop)
 }
