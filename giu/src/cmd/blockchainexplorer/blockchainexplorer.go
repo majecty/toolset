@@ -13,18 +13,9 @@ const (
 	tabTx    = 2
 )
 
-var (
-	globalError error
-)
-
 func makeWidgets() []g.Widget {
-	if globalError != nil {
-		return []g.Widget{
-			g.Label("Error: " + globalError.Error()),
-			g.Button("Reset").OnClick(func() {
-				globalError = nil
-			}),
-		}
+	if explorer.GlobalError != nil {
+		return explorer.DrawGlobalErrorWidgets()
 	}
 
 	widgets := []g.Widget{
