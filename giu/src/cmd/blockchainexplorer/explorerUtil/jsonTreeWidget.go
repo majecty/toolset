@@ -49,7 +49,7 @@ func makeJsonTreeWidgetRecursively(data interface{}) []g.Widget {
 		}
 	default:
 		widgets = append(widgets, g.Row(
-			g.Label(fmt.Sprintf("%v", data)),
+			DrawSuperTextWidget(fmt.Sprintf("%v", data)),
 		))
 	}
 

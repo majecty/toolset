@@ -19,12 +19,18 @@ func DrawNodeWidgets() []g.Widget {
 	return []g.Widget{
 		g.Condition(latestBlockHeight != 0,
 			[]g.Widget{
-				g.Label(fmt.Sprintf("Latest block height: %d", latestBlockHeight)),
+				g.Row(
+					g.Label("Latest block height: "),
+					explorerutil.DrawSuperTextWidget(fmt.Sprint(latestBlockHeight)),
+				),
 			},
 			nil),
 		g.Condition(latestBlockHash != "",
 			[]g.Widget{
-				g.Label(fmt.Sprintf("Latest block hash: %s", latestBlockHash)),
+				g.Row(
+					g.Label("Latest block hash: "),
+					explorerutil.DrawSuperTextWidget(latestBlockHash),
+				),
 			}, nil),
 		g.Button("Get Node information").OnClick(func() {
 			nodeStatus = ""
