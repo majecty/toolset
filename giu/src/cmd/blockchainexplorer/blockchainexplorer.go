@@ -3,18 +3,17 @@ package main
 import (
 	_ "embed"
 
+	explorer "toolset/giu/src/cmd/blockchainexplorer/explorer"
+
 	g "github.com/AllenDang/giu"
-	tendermintHTTP "github.com/tendermint/tendermint/rpc/client/http"
 )
 
 const (
-	tabBlock      = 1
-	tabTx         = 2
-	publicNodeUrl = "https://rpc-arctic-1.sei-apis.com/"
+	tabBlock = 1
+	tabTx    = 2
 )
 
 var (
-	nodeUrl     string = publicNodeUrl
 	globalError error
 )
 
@@ -32,16 +31,18 @@ func makeWidgets() []g.Widget {
 		g.Label("Sei blockchain explorer"),
 		g.Row(
 			g.Label("Node URL:"),
-			g.InputText(&nodeUrl),
+			g.InputText(&explorer.NodeUrl),
 		),
 		g.Button("Reset to public node url").OnClick(func() {
-			nodeUrl = publicNodeUrl
+			explorer.ResetNodeUrl()
 		}),
 		g.Spacing(),
 		g.TabBar().
 			TabItems(
 				g.TabItem("Node").
-					Layout(g.Label("In the Node tab")),
+					Layout(
+						explorer.DrawNodeWidgets()...,
+					),
 				g.TabItem("Block").
 					Layout(g.Label("In the Block tab")),
 				g.TabItem("Tx").
@@ -113,13 +114,4 @@ func onClickGetRandomRecentTx() {
 	// rawTxInformation = string(jsonBytes)
 
 	// fmt.Printf("Tx: %v\n", result)
-}
-
-func getTendermintHTTPClient() (*tendermintHTTP.HTTP, error) {
-	tendermintHTTPClient, err := tendermintHTTP.New(nodeUrl)
-	if err != nil {
-		return nil, err
-	}
-
-	return tendermintHTTPClient, nil
 }
