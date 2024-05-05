@@ -37,7 +37,9 @@ func makeWidgets() []g.Widget {
 						explorer.DrawNodeWidgets()...,
 					),
 				g.TabItem("Block").
-					Layout(g.Label("In the Block tab")),
+					Layout(
+						explorer.DrawBlockWidgets()...,
+					),
 				g.TabItem("Tx").
 					Layout(g.Label("In the Tx tab")),
 				g.TabItem("Address").
