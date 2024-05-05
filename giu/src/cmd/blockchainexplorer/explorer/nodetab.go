@@ -3,6 +3,7 @@ package explorer
 import (
 	"context"
 	"encoding/json"
+	explorerutil "toolset/giu/src/cmd/blockchainexplorer/explorerUtil"
 
 	g "github.com/AllenDang/giu"
 )
@@ -18,19 +19,19 @@ func DrawNodeWidgets() []g.Widget {
 			nodeStatus = ""
 			httpClient, err := getTendermintHTTPClient()
 			if err != nil {
-				SetGlobalError(err)
+				explorerutil.SetGlobalError(err)
 				return
 			}
 
 			nodeStatusResult, err := httpClient.Status(context.Background())
 			if err != nil {
-				SetGlobalError(err)
+				explorerutil.SetGlobalError(err)
 				return
 			}
 
 			nodeStatusJson, err := json.Marshal(nodeStatusResult)
 			if err != nil {
-				SetGlobalError(err)
+				explorerutil.SetGlobalError(err)
 				return
 			}
 

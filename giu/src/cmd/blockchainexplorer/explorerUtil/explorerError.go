@@ -1,4 +1,4 @@
-package explorer
+package explorerutil
 
 import g "github.com/AllenDang/giu"
 

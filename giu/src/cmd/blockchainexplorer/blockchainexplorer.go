@@ -4,6 +4,7 @@ import (
 	_ "embed"
 
 	explorer "toolset/giu/src/cmd/blockchainexplorer/explorer"
+	explorerutil "toolset/giu/src/cmd/blockchainexplorer/explorerUtil"
 
 	g "github.com/AllenDang/giu"
 )
@@ -14,8 +15,8 @@ const (
 )
 
 func makeWidgets() []g.Widget {
-	if explorer.GlobalError != nil {
-		return explorer.DrawGlobalErrorWidgets()
+	if explorerutil.GlobalError != nil {
+		return explorerutil.DrawGlobalErrorWidgets()
 	}
 
 	widgets := []g.Widget{
