@@ -18,8 +18,6 @@ var (
 	txHash               string
 	rawTxInformation     string
 	tendermintHTTPClient *tendermintHTTP.HTTP
-	//go:embed txviewer.css
-	cssStyle []byte
 )
 
 func init() {
@@ -48,7 +46,6 @@ func makeWidgets() []g.Widget {
 func loop() {
 	widgets := makeWidgets()
 
-	// g.setnext
 	g.SingleWindow().Layout(
 		widgets...,
 	)
@@ -57,10 +54,6 @@ func loop() {
 func main() {
 	wnd := g.NewMasterWindow("Tx viewer", 600, 400, 0)
 	g.Context.FontAtlas.SetDefaultFontSize(3)
-
-	// if err := g.ParseCSSStyleSheet(cssStyle); err != nil {
-	// 	panic(err)
-	// }
 
 	wnd.Run(loop)
 }
@@ -131,9 +124,9 @@ func makeJsonTreeWidget() []g.Widget {
 func makeJsonTreeWidgetRecursively(data interface{}) []g.Widget {
 	var widgets []g.Widget = make([]g.Widget, 0)
 
-	switch data.(type) {
+	switch v := data.(type) {
 	case map[string]interface{}:
-		mapp := data.(map[string]interface{})
+		mapp := v
 		keys := make([]string, 0, len(mapp))
 		for k := range mapp {
 			keys = append(keys, k)
@@ -147,7 +140,7 @@ func makeJsonTreeWidgetRecursively(data interface{}) []g.Widget {
 			))
 		}
 	case []interface{}:
-		arr := data.([]interface{})
+		arr := v
 		for i, value := range arr {
 			widgets = append(widgets, g.Row(
 				g.TreeNode(fmt.Sprintf("%d", i)).Layout(makeJsonTreeWidgetRecursively(value)...),
