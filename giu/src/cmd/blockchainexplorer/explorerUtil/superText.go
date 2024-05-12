@@ -46,11 +46,12 @@ func DrawSuperTextWidget(text string) g.Widget {
 		)
 	}
 
-	if isHex {
+	if isHex && !isNumber {
 		contextMenuItems = append(contextMenuItems,
-			g.Selectable("Find block by hash").OnClick(func() {
-				AddBlockWindow(text)
-			}),
+			// TODO: 블록 hash로 조회가 잘 안됨
+			// g.Selectable("Find block by hash").OnClick(func() {
+			// 	AddBlockWindow(text)
+			// }),
 			g.Selectable("Find transaction by hash").OnClick(func() {
 				SetGlobalError(fmt.Errorf("not implemented"))
 			}),
