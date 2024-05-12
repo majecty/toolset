@@ -1,6 +1,7 @@
 package explorerutil
 
 import (
+	"encoding/base64"
 	"fmt"
 	"strconv"
 
@@ -25,10 +26,21 @@ func DrawSuperTextWidget(text string) g.Widget {
 		isAddress = true
 	}
 
-	var widgets []g.Widget
-	widgets = append(widgets,
-		g.Selectable(text),
-	)
+	var isBase64 bool
+	base64Text := make([]byte, base64.StdEncoding.DecodedLen(len(text)))
+	n, err := base64.StdEncoding.Decode(base64Text, []byte(text))
+	base64Text = base64Text[:n]
+	if err != nil {
+		isBase64 = false
+	} else {
+		isBase64 = true
+		for _, c := range base64Text {
+			if c < 32 || c > 126 {
+				isBase64 = false
+				break
+			}
+		}
+	}
 
 	var contextMenuItems []g.Widget
 	contextMenuItems = append(contextMenuItems,
@@ -66,7 +78,17 @@ func DrawSuperTextWidget(text string) g.Widget {
 		)
 	}
 
-	widgets = append(widgets, g.ContextMenu().MouseButton(g.MouseButtonLeft).Layout(contextMenuItems...))
+	var widgets []g.Widget
+	widgets = append(widgets,
+		g.Selectable(text),
+		g.ContextMenu().MouseButton(g.MouseButtonLeft).Layout(contextMenuItems...),
+		// g.Label(fmt.Sprintf("isBase64 %v", isBase64)),
+	)
+	if isBase64 {
+		widgets = append(widgets,
+			g.Label(fmt.Sprintf("Base64: %s", base64Text)),
+		)
+	}
 
 	return g.Layout(widgets)
 }
