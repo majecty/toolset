@@ -49,7 +49,7 @@ func DrawSuperTextWidget(text string) g.Widget {
 	if isHex {
 		contextMenuItems = append(contextMenuItems,
 			g.Selectable("Find block by hash").OnClick(func() {
-				SetGlobalError(fmt.Errorf("not implemented"))
+				AddBlockWindow(text)
 			}),
 			g.Selectable("Find transaction by hash").OnClick(func() {
 				SetGlobalError(fmt.Errorf("not implemented"))
@@ -60,7 +60,7 @@ func DrawSuperTextWidget(text string) g.Widget {
 	if isNumber {
 		contextMenuItems = append(contextMenuItems,
 			g.Selectable("Find block by height").OnClick(func() {
-				SetGlobalError(fmt.Errorf("not implemented"))
+				AddBlockWindow(text)
 			}),
 		)
 	}

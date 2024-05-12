@@ -18,6 +18,12 @@ type BlockWindow struct {
 	BlockResult       string
 }
 
+func AddBlockWindow(blockNumberOrHash string) {
+	windows = append(windows, BlockWindow{
+		blockNumberOrHash: blockNumberOrHash,
+	})
+}
+
 func DummyBlockWindows() {
 	windows = append(windows, BlockWindow{
 		blockNumberOrHash: "18937999",
