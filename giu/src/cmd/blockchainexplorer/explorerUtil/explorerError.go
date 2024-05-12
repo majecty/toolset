@@ -1,12 +1,17 @@
 package explorerutil
 
-import g "github.com/AllenDang/giu"
+import (
+	"fmt"
+
+	g "github.com/AllenDang/giu"
+)
 
 var (
 	GlobalError error
 )
 
 func SetGlobalError(err error) {
+	fmt.Printf("err: %v\n", err)
 	GlobalError = err
 }
 

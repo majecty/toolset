@@ -1,4 +1,4 @@
-package explorer
+package explorerutil
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ var (
 	NodeUrl string = publicNodeUrl
 )
 
-func getTendermintHTTPClient() (*tendermintHTTP.HTTP, error) {
+func GetTendermintHTTPClient() (*tendermintHTTP.HTTP, error) {
 	tendermintHTTPClient, err := tendermintHTTP.New(NodeUrl)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create tendermint client: %w", err)

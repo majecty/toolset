@@ -23,10 +23,10 @@ func makeWidgets() []g.Widget {
 		g.Label("Sei blockchain explorer"),
 		g.Row(
 			g.Label("Node URL:"),
-			g.InputText(&explorer.NodeUrl),
+			g.InputText(&explorerutil.NodeUrl),
 		),
 		g.Button("Reset to public node url").OnClick(func() {
-			explorer.ResetNodeUrl()
+			explorerutil.ResetNodeUrl()
 		}),
 		g.Spacing(),
 		g.Separator(),

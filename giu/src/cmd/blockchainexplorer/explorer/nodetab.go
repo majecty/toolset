@@ -34,7 +34,7 @@ func DrawNodeWidgets() []g.Widget {
 			}, nil),
 		g.Button("Get Node information").OnClick(func() {
 			nodeStatus = ""
-			httpClient, err := getTendermintHTTPClient()
+			httpClient, err := explorerutil.GetTendermintHTTPClient()
 			if err != nil {
 				explorerutil.SetGlobalError(fmt.Errorf("failed to create tendermint client: %w", err))
 				return

@@ -27,7 +27,7 @@ func DrawBlockWidgets() []g.Widget {
 }
 
 func getLatestBlock() {
-	httpClient, err := getTendermintHTTPClient()
+	httpClient, err := explorerutil.GetTendermintHTTPClient()
 	if err != nil {
 		explorerutil.SetGlobalError(fmt.Errorf("failed to create tendermint client: %w", err))
 		return
