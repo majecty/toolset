@@ -63,6 +63,17 @@ func (bw *BlockWindow) drawBlockindow() []g.Widget {
 	return []g.Widget{
 		g.Label("Block Number or Hash"),
 		g.InputText(&bw.blockNumberOrHash),
+		g.Button("Close").OnClick(func() {
+			var myWindowIndex int
+			for i := range windows {
+				if windows[i].blockNumberOrHash == bw.blockNumberOrHash {
+					myWindowIndex = i
+					break
+				}
+			}
+
+			windows = append(windows[:myWindowIndex], windows[myWindowIndex+1:]...)
+		}),
 		g.Button("Get Block").OnClick(func() {
 			bw.getBlock()
 		}),
