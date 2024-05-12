@@ -15,6 +15,7 @@ var windows []BlockWindow
 
 type BlockWindow struct {
 	blockNumberOrHash string
+	Block             string
 	BlockResult       string
 }
 
@@ -77,7 +78,15 @@ func (bw *BlockWindow) drawBlockindow() []g.Widget {
 		g.Button("Get Block").OnClick(func() {
 			bw.getBlock()
 		}),
-		g.Condition(bw.BlockResult != "", DrawJsonTreeWidget(bw.BlockResult), nil),
+		g.Button("Get Block Result").OnClick(func() {
+			bw.getBlockResult()
+		}),
+		g.Condition(bw.Block != "", DrawJsonTreeWidgetWithRoot(bw.Block, "block"), nil),
+		g.Condition(bw.BlockResult != "",
+			g.Layout{
+				g.TreeNode("block result").Layout(DrawJsonTreeWidget(bw.BlockResult)...),
+			},
+			nil),
 	}
 }
 
@@ -109,5 +118,42 @@ func (bw *BlockWindow) getBlock() {
 		return
 	}
 
-	bw.BlockResult = string(blockJson)
+	bw.Block = string(blockJson)
+}
+
+func (bw *BlockWindow) getBlockResult() {
+	blockHeightInt, err := strconv.ParseInt(bw.blockNumberOrHash, 10, 64)
+	useBlockHeight := err == nil
+
+	tendermintClient, err := GetTendermintHTTPClient()
+	if err != nil {
+		SetGlobalError(fmt.Errorf("failed to create tendermint client: %w", err))
+		return
+	}
+
+	var result *coretypes.ResultBlockResults
+	if useBlockHeight {
+		result, err = tendermintClient.BlockResults(context.Background(), &blockHeightInt)
+	} else {
+		var block *coretypes.ResultBlock
+		block, err = tendermintClient.BlockByHash(context.Background(), bytes.HexBytes(bw.blockNumberOrHash))
+		if err != nil {
+			SetGlobalError(fmt.Errorf("failed to get block by hash: %w", err))
+			return
+		}
+		result, err = tendermintClient.BlockResults(context.Background(), &block.Block.Height)
+	}
+
+	if err != nil {
+		SetGlobalError(fmt.Errorf("failed to get block result: %w", err))
+		return
+	}
+
+	blockResultJson, err := json.Marshal(result)
+	if err != nil {
+		SetGlobalError(fmt.Errorf("failed to marshal block result: %w", err))
+		return
+	}
+
+	bw.BlockResult = string(blockResultJson)
 }

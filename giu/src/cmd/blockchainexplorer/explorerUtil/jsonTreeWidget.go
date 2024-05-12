@@ -8,6 +8,22 @@ import (
 	g "github.com/AllenDang/giu"
 )
 
+func DrawJsonTreeWidgetWithRoot(jsonString string, rootName string) []g.Widget {
+	if jsonString == "" {
+		return nil
+	}
+
+	var data interface{}
+	if err := json.Unmarshal([]byte(jsonString), &data); err != nil {
+		SetGlobalError(fmt.Errorf("failed to unmarshal json: %v", err))
+		return nil
+	}
+
+	return []g.Widget{
+		g.TreeNode(rootName).Layout(makeJsonTreeWidgetRecursively(data)...),
+	}
+}
+
 func DrawJsonTreeWidget(jsonString string) []g.Widget {
 	if jsonString == "" {
 		return nil
