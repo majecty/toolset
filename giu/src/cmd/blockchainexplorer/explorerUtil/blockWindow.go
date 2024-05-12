@@ -19,6 +19,12 @@ type BlockWindow struct {
 }
 
 func AddBlockWindow(blockNumberOrHash string) {
+	for i := range windows {
+		if windows[i].blockNumberOrHash == blockNumberOrHash {
+			return
+		}
+	}
+
 	windows = append(windows, BlockWindow{
 		blockNumberOrHash: blockNumberOrHash,
 	})
